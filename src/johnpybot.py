@@ -19,8 +19,7 @@ class JohnPyBot(botlib.Bot):
                          "!tumblr",
                          "!insult"]
 
-        self.masters = []
-        self.masters.append("Garnavis")
+        self.url_monitoring = []
 
         self.client = pytumblr.TumblrRestClient( \
                 "sSMRBoKp2ognfANViuUGt6V4CfNDhTIVSC8agmORVGH5VDXTon")
@@ -63,26 +62,30 @@ class JohnPyBot(botlib.Bot):
 
         # Add a user to the URL check list.
         if botlib.check_found(self.data, "!add"):
-            self.masters.append(self.get_args()[0])
+            nicks = self.get_args()
+            for nick in nicks:
+                self.url_monitoring.append(nick)
+                self.protocol.privmsg(self.channel, \
+                        "Checking URLs for %s." % nick)
 
         # Show the users whose URLs Lucien checks.
         if botlib.check_found(self.data, "!list"):
-            self.protocol.privmsg(self.channel, self.masters)
+            self.protocol.privmsg(self.channel, self.url_monitoring)
 
         # Find a recent text post with the given tag.
         if botlib.check_found(self.data, "!tumblr"):
-            self.tag = " ".join(self.get_args())
-            self.posts = self.client.tagged(self.tag, filter="text")
-            self.text_posts = filter(lambda x: "title" in x, self.posts)
-            if len(self.text_posts) > 0:
-                self.post = choice(self.text_posts)
-                self.title = self.post.get("title").encode("utf-8", "ignore")
-                if "body" in self.post:
-                    self.body = self.post.get("body").encode("utf-8", "ignore")
+            tag = " ".join(self.get_args())
+            posts = self.client.tagged(tag, filter="text")
+            text_posts = filter(lambda x: "title" in x, posts)
+            if len(text_posts) > 0:
+                post = choice(self.text_posts)
+                title = post.get("title").encode("utf-8", "ignore")
+                if "body" in post:
+                    body = post.get("body").encode("utf-8", "ignore")
                 else:
-                    self.body = self.post.get("url").encode("utf-8", "ignore")
-                self.protocol.privmsg(self.channel, self.title)
-                self.protocol.privmsg(self.channel, self.body)
+                    body = post.get("url").encode("utf-8", "ignore")
+                self.protocol.privmsg(self.channel, title)
+                self.protocol.privmsg(self.channel, body)
             else:
                 self.protocol.privmsg(self.channel, \
                         "Sorry, I can't find anything for that tag.")
@@ -96,5 +99,5 @@ class JohnPyBot(botlib.Bot):
                      choice(self.insults_c)))
 
 if __name__== "__main__":
-    # Create a new instance of our bot and run it
-    JohnPyBot("irc.freenode.net", "#oswegocsa", "Lucien").run()
+    # Create a new instance of the bot and run it
+    JohnPyBot("irc.synirc.net", "#rhirc", "Lucien").run()
