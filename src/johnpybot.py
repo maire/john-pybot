@@ -54,7 +54,7 @@ class JohnPyBot(botlib.Bot):
 
         # Get the title from the web page linked.
         if botlib.check_found(self.data, "http://") and \
-           self.get_username() in self.masters:
+           self.get_username() in self.url_monitoring:
             url = "http://" + self.data.partition("http://")[2]
             soup = BeautifulSoup(urllib.urlopen(url))
             self.protocol.privmsg(self.channel, \
@@ -78,7 +78,7 @@ class JohnPyBot(botlib.Bot):
             posts = self.client.tagged(tag, filter="text")
             text_posts = filter(lambda x: "title" in x, posts)
             if len(text_posts) > 0:
-                post = choice(self.text_posts)
+                post = choice(text_posts)
                 title = post.get("title").encode("utf-8", "ignore")
                 if "body" in post:
                     body = post.get("body").encode("utf-8", "ignore")
@@ -100,4 +100,4 @@ class JohnPyBot(botlib.Bot):
 
 if __name__== "__main__":
     # Create a new instance of the bot and run it
-    JohnPyBot("irc.synirc.net", "#rhirc", "Lucien").run()
+    JohnPyBot("irc.synirc.net", "#nyc", "Lucien").run()
