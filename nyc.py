@@ -13,7 +13,7 @@ post_adjectives = ['a stunning', 'a rage-inducing', 'a bombshell', 'a misogynist
                    'a bannable']
 dead_threshold = 2
 poll_sleep = 10
-change_of_using_a_funny_adjective = .15
+chance_of_using_a_funny_adjective = .15
 
 class nyc(threading.Thread):
 
@@ -72,9 +72,9 @@ class nyc(threading.Thread):
         page = leaf.parse(poll.text)
 
         self.callback(self.channel, 'Forums {0} {1} made {2} new post in the NYC thread! {3}'.format(
-          choice(user_adjectives) if random() < change_of_using_a_funny_adjective else 'poster',
+          choice(user_adjectives) if random() < chance_of_using_a_funny_adjective else 'poster',
           page('.author')[new_index].text,
-          choice(post_adjectives) if random() < change_of_using_a_funny_adjective else 'a',
+          choice(post_adjectives) if random() < chance_of_using_a_funny_adjective else 'a',
           poll.url
         ))
 

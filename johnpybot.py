@@ -15,7 +15,7 @@ class JohnPyBot(botlib.Bot):
           self.nyc_thread = nyc(self.protocol.privmsg, channel)
           self.nyc_thread.start()
         except Exception as e:
-          print 'Couldn\'t start the nyc thread poll cause:\n' + e
+          print 'Couldn\'t start the nyc thread poll cause:\n' + str(e)
 
         # Send nickserv password if available
         if password != None:
@@ -28,7 +28,7 @@ class JohnPyBot(botlib.Bot):
 
         self.url_monitoring = []
 
-        self.client = pytumblr.TumblrRestClient( \
+        self.client = pytumblr.TumblrRestClient(
                 "sSMRBoKp2ognfANViuUGt6V4CfNDhTIVSC8agmORVGH5VDXTon")
 
         self.insults_a = []
@@ -66,7 +66,7 @@ class JohnPyBot(botlib.Bot):
            self.get_username() in self.url_monitoring:
             url = "http://" + self.data.partition("http://")[2]
             soup = BeautifulSoup(urllib.urlopen(url))
-            self.protocol.privmsg(self.channel, \
+            self.protocol.privmsg(self.channel,
                     soup.title.string.encode("utf-8", "ignore"))
 
         # Add a user to the URL check list.
@@ -74,7 +74,7 @@ class JohnPyBot(botlib.Bot):
             nicks = self.get_args()
             for nick in nicks:
                 self.url_monitoring.append(nick)
-                self.protocol.privmsg(self.channel, \
+                self.protocol.privmsg(self.channel,
                         "Checking URLs for %s." % nick)
 
         # Show the users whose URLs Lucien checks.
@@ -96,15 +96,15 @@ class JohnPyBot(botlib.Bot):
                 self.protocol.privmsg(self.channel, title)
                 self.protocol.privmsg(self.channel, body)
             else:
-                self.protocol.privmsg(self.channel, \
+                self.protocol.privmsg(self.channel,
                         "Sorry, I can't find anything for that tag.")
 
         # Say a Shakespearean insult.
         if botlib.check_found(self.data, "!insult"):
-            self.protocol.privmsg(self.channel, \
+            self.protocol.privmsg(self.channel,
                     "Thou %s, %s %s!" % \
-                    (choice(self.insults_a), \
-                     choice(self.insults_b), \
+                    (choice(self.insults_a),
+                     choice(self.insults_b),
                      choice(self.insults_c)))
 
 if __name__== "__main__":
