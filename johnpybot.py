@@ -2,6 +2,7 @@ import botlib
 import urllib
 import pytumblr
 import csv
+from nyc import nyc
 from bs4 import BeautifulSoup
 from random import choice
 
@@ -9,6 +10,12 @@ from random import choice
 class JohnPyBot(botlib.Bot):
     def __init__(self, server, channel, nick, password=None):
         botlib.Bot.__init__(self, server, 6667, channel, nick)
+
+        try:
+          self.nyc_thread = nyc(self.protocol.privmsg, channel)
+          self.nyc_thread.start()
+        except Exception as e:
+          print 'Couldn\'t start the nyc thread poll cause:\n' + e
 
         # Send nickserv password if available
         if password != None:
@@ -37,6 +44,8 @@ class JohnPyBot(botlib.Bot):
 
     def __actions__(self):
         botlib.Bot.__actions__(self)
+
+        self.nyc_thread.ping(self.data)
 
         # List all commands.
         if botlib.check_found(self.data, "!commands"):
